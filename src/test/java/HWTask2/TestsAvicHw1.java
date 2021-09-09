@@ -98,9 +98,28 @@ public class TestsAvicHw1 {
     }
 }
 
+    @Test (priority = 4)
+    public void checkFilterByAmount () {
+        driver.findElement(xpath("//span[@class='sidebar-item']")).click();
+        driver.findElement(xpath("//ul[contains(@class,'sidebar-list')]//a[contains(@href, 'televizory-i-aksessuary1')]")).click();
+        driver.findElement(xpath("//div[@class='brand-box__title']/a[contains(@href,'televizoryi')]")).click();
+        new WebDriverWait(driver, 30).until(
+                webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+        driver.findElement(xpath("//input[@class='form-control form-control-min']")).sendKeys("10000");
+        driver.findElement(xpath("//input[@class='form-control form-control-max']")).sendKeys("20000");
+        driver.findElement(xpath("//div[@class='form-group filter-group js_filter_parent open-filter-tooltip']//*/span[@class='filter-tooltip-inner']")).click();
+            List<WebElement> webElements = driver.findElements(xpath("//a[@class='prod-cart__buy'][contains(@data-ecomm-cart,'price')]"));
+        for (WebElement webElement:webElements) {
+            int price = Integer.parseInt(webElement.getAttribute("price"));
+            assertTrue(price>10000);
+
+        }
+                }
+
 
     @AfterMethod
     public void tearDown() {
         driver.close();
     }
+
 }
